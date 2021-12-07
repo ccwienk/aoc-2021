@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import functools
+
 import util
 
 with open(util.input_file) as f:
@@ -8,10 +10,25 @@ with open(util.input_file) as f:
 min_pos = min(positions)
 max_pos = max(positions)
 
+
+@functools.cache
+def calc_distance_costs(distance):
+    if distance < 2:
+        return distance
+
+    costs = 0
+
+    for c in range(distance, 0, -1):
+        costs += c
+
+    return costs
+
+
 def costs(positions, tgt_pos: int):
     c = 0
     for pos in positions:
-        c += abs(pos - tgt_pos)
+        distance = abs(pos - tgt_pos)
+        c += calc_distance_costs(distance=distance)
 
     return c
 
@@ -22,4 +39,4 @@ all_costs = {
 
 cheapest = min(all_costs.values())
 
-print(cheapest)
+print(f'{cheapest=}')
