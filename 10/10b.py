@@ -24,20 +24,24 @@ def parse_line(line: str):
                 if c == expected_token:
                     continue
 
-                # found an illegal character
-                match c:
-                    case ')':
-                        return 3
-                    case ']':
-                        return 57
-                    case '}':
-                        return 1197
-                    case '>':
-                        return 25137
-    else:
-        return 0 # line was incomplete
+                # found an illegal character - ignore line
+                return 0
+
+    # line is incomplete
+    char_scores = {'(': 1, '[': 2, '{': 3, '<': 4}
+    total = 0
+
+    while tokens and (token := tokens.pop()):
+        total *= 5
+        total += char_scores[token]
+
+    return total
 
 
-total_score = sum((parse_line(line) for line in lines))
+scores = ((parse_line(line) for line in lines))
+scores = sorted(s for s in scores if s > 0)
 
-print(f'{total_score=}')
+
+middle_score = scores[int(len(scores)/2)]
+
+print(f'{middle_score=}')
