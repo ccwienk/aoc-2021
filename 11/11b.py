@@ -86,10 +86,13 @@ def simulate_step() -> int:
 
   return flushes
 
-total = 0
+step = 0
 
-for _ in range(100):
-  total += simulate_step()
+while True:
+  count = simulate_step()
+  step += 1
+  if count == rows * cols:
+      break
   flashed_points.clear()
 
-print(f'{total=}')
+print(f'synced at {step=}')
