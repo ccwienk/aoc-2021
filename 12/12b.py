@@ -37,19 +37,26 @@ for line in lines:
 # each path is a tuple of visited nodes (first, second, .. last)
 initial_path = 'start',
 
-def iter_paths(path: tuple[str]):
+def iter_paths(path: tuple[str], double_visit_small_cave:str):
     current = path[-1]
     # available tgts are all accessible nodes w/o visited "small" ones, as those must only be
     # visited at most once
     available = available_tgts[current] - {n for n in small if n in path}
+    if len(tuple(c for c in path if c == double_visit_small_cave)) < 2 and \
+        double_visit_small_cave in available_tgts[current]:
+        available.add(double_visit_small_cave)
 
     for next_node in available:
         new_path = path + (next_node,)
         if next_node == 'end':
             yield new_path
         else:
-            yield from iter_paths(path=new_path)
+            yield from iter_paths(path=new_path, double_visit_small_cave=double_visit_small_cave)
 
 
-all_paths = set(iter_paths(path=initial_path))
+all_paths = set()
+
+for double_cave in small:
+    all_paths |= set(iter_paths(path=initial_path, double_visit_small_cave=double_cave))
+
 print(f'{len(all_paths)=}')
