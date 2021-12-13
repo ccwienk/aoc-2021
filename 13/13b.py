@@ -2,6 +2,7 @@
 
 import dataclasses
 import functools
+import itertools
 
 import util
 
@@ -26,11 +27,6 @@ with open(util.input_file) as f:
 
             fold_instructions.append((dim, val))
 
-
-max_x = max(coords, key=lambda c: c[0])[0]
-max_y = max(coords, key=lambda c: c[1])[1]
-
-print(f'{max_x=}, {max_y=}')
 
 
 def purge(dim, val):
@@ -81,9 +77,22 @@ def fold(dim, val):
 
 for dim, val in fold_instructions:
     fold(dim=dim, val=val)
-    break # according to requirements, we shall only fold once
 
 # deduplicate
 unique_coords = set(coords)
 
 print(f'{len(unique_coords)=}')
+
+max_x = max(coords, key=lambda c: c[0])[0]
+max_y = max(coords, key=lambda c: c[1])[1]
+
+print(f'{max_x=}, {max_y=}')
+
+for y in range(max_y + 1):
+    for x in range(max_x + 1):
+        if (x, y) in unique_coords:
+            print('X', end='')
+        else:
+            print(' ', end='')
+
+    print('\n', end='')
