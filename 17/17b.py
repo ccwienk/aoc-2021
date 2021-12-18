@@ -41,32 +41,28 @@ def within_tgt(p: tuple[int, int]):
     return True
 
 
-max_reached_y = 0
-best_initial_y = 0
+allowed_x_range = (18, 215) # < 18 will never reach, > 215 will "overshoot"
+allowed_y_range = (131, -65) # must not "overshoot"
 
-for initial_y in range(0, 133):
-    y_max_candidate = 0
-    for p in iter_path(p=(0,0), v=(18, initial_y)):
-        x, y = p
+ok_sum = 0
 
-        if y > y_max_candidate:
-            y_max_candidate = y
+for initial_x in range(18, 400 + 1):
+    for initial_y in range(-400, 300 +1):
+        for p in iter_path(p=(0,0), v=(initial_x, initial_y)):
+            x, y = p
 
-        if y < tgt_y_min:
-            print(f'{initial_y=} too deep, already')
-            break
+            if y < tgt_y_min:
+                #print(f'{x=},{y=} {initial_x=} too deep, already')
+                break
 
-        if x > tgt_x_max:
-            print('too far, already')
-            break
+            if x > tgt_x_max:
+                # print('too far, already')
+                break
 
-        if within_tgt(p):
-            print('okay')
-            if y_max_candidate > max_reached_y:
-                max_reached_y = y_max_candidate
-                best_initial_y = initial_y
-            break
+            if within_tgt(p):
+                #print(f'okay {initial_x=}')
+                ok_sum += 1
+                break
 
 
-print(f'{max_reached_y=}')
-print(f'{best_initial_y=}')
+print(f'{ok_sum=}')
