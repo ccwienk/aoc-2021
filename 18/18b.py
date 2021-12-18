@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
+import copy
+import itertools
 import math
 import typing
 
 import util
 
-#with open(util.input_file) as f:
-with open('input3.txt') as f:
+with open(util.input_file) as f:
     numbers = [eval(l.strip()) for l in f.readlines()]
 
 
@@ -153,12 +154,16 @@ def magnitude(pair_or_number):
             return single
 
 
-result = reduce(numbers[0])
+max_magnitude = 0
 
-for number in numbers[1:]:
-    number = reduce(number)
+for left, right in itertools.combinations(numbers, 2):
+    lplusr = reduce(add(copy.deepcopy(left), copy.deepcopy(right)))
+    rplusl = reduce(add(copy.deepcopy(right), copy.deepcopy(left)))
 
-    result = reduce(add(result, number))
+    lmag = magnitude(lplusr)
+    rmag = magnitude(rplusl)
 
-print(result)
-print(magnitude(result))
+    max_magnitude = max(max_magnitude, lmag, rmag)
+
+
+print(max_magnitude)
